@@ -27,10 +27,12 @@ const Home = ({ allPostsData }: Props) => (
       <title>{siteTitle}</title>
     </Head>
     <section className={utilStyles.headingMd}>
-      <p>{`Hi, there! I'm Yuki.`}</p>
-      <p>
-        {`(This is a sample website -  you'll be building a site like this on `}
-        <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
+      <h2 className={utilStyles.headingLg}>About</h2>
+      <p>This is a blog app I built by following {' '}
+        <a href="https://nextjs.org/learn/basics/create-nextjs-app">the Next.js tutorial</a>.
+      </p>
+      <p>The code written by TypeScript is {' '}
+        <a href="https://github.com/yu-yamamura/nextjs-blog">here</a>.
       </p>
     </section>
     <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
