@@ -1,17 +1,17 @@
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
 import { ReactNode } from "react";
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import styles from './layout.module.css';
-import utilStyles from '../styles/utils.module.css';
+import { siteMetadata } from "../data/site-metadata";
+import styles from "../styles/components/Layout.module.css";
+import utilStyles from "../styles/utils.module.css";
 
 type Props = {
-  children: ReactNode[];
+  children: ReactNode;
   home: boolean;
 };
 
-const name = 'Yuki Yamamura';
-export const siteTitle = 'Next.js Sample Website';
+const { title, authorName } = siteMetadata;
 
 const Layout = ({ children, home }: Props) => (
   <div className={styles.container}>
@@ -24,10 +24,10 @@ const Layout = ({ children, home }: Props) => (
       <meta
         property="og:image"
         content={`https://og-image.vercel.app/${encodeURI(
-          siteTitle
+          title
         )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
       />
-      <meta name="og:title" content={siteTitle} />
+      <meta name="og:title" content={title} />
       <meta name="twitter:card" content="summary_large_image" />
     </Head>
     <header className={styles.header}>
@@ -39,11 +39,11 @@ const Layout = ({ children, home }: Props) => (
             className={utilStyles.borderCircle}
             height={144}
             width={144}
-            alt={name}
+            alt={authorName}
           />
-          <h1 className={utilStyles.heading2Xl}>{name}</h1>
+          <h1 className={utilStyles.heading2Xl}>{authorName}</h1>
         </>
-      ): (
+      ) : (
         <>
           <Link href="/">
             <a>
@@ -53,13 +53,13 @@ const Layout = ({ children, home }: Props) => (
                 className={utilStyles.borderCircle}
                 height={108}
                 width={108}
-                alt={name}
+                alt={authorName}
               />
             </a>
-          </Link> 
+          </Link>
           <h2 className={utilStyles.headingLg}>
             <Link href="/">
-              <a className={utilStyles.colorInherit}>{name}</a>
+              <a className={utilStyles.colorInherit}>{authorName}</a>
             </Link>
           </h2>
         </>

@@ -1,37 +1,43 @@
-import { GetStaticProps } from 'next';
-import Head from 'next/head';
-import Link from 'next/link';
-import Layout, { siteTitle } from "../components/layout";
-import Date from "../components/date";
-import { getSortedPostData } from '../lib/posts';
-import { PostData } from '../types/Post';
-import utilStyles from '../styles/utils.module.css';
+import { GetStaticProps } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import Layout from "../components/Layout";
+import Date from "../components/Date";
+import { getSortedPostsData } from "../lib/posts";
+import { PostData } from "../types/PostData";
+import { siteMetadata } from "../data/site-metadata";
+import utilStyles from "../styles/utils.module.css";
 
 type Props = {
   allPostsData: PostData[];
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const allPostsData = getSortedPostData();
+  const allPostsData = await getSortedPostsData();
 
-  return ({
+  return {
     props: {
       allPostsData,
-    }
-  });
+    },
+  };
 };
 
 const Home = ({ allPostsData }: Props) => (
   <Layout home>
     <Head>
-      <title>{siteTitle}</title>
+      <title>{siteMetadata.title}</title>
     </Head>
     <section className={utilStyles.headingMd}>
       <h2 className={utilStyles.headingLg}>About</h2>
-      <p>This is a blog app I built by following {' '}
-        <a href="https://nextjs.org/learn/basics/create-nextjs-app">the Next.js tutorial</a>.
+      <p>
+        This is a blog app I built by following{" "}
+        <a href="https://nextjs.org/learn/basics/create-nextjs-app">
+          the Next.js tutorial
+        </a>
+        .
       </p>
-      <p>The code written by TypeScript is {' '}
+      <p>
+        The code written by TypeScript is{" "}
         <a href="https://github.com/yu-yamamura/nextjs-blog">here</a>.
       </p>
     </section>
