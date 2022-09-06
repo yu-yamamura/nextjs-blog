@@ -1,7 +1,11 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { ParsedUrlQuery } from "querystring";
-import { getAllPostIds, getPostData } from "../../lib/posts";
+import {
+  getAllPostIds,
+  getRawPostData,
+  parseRawPostData,
+} from "../../lib/posts";
 import Layout from "../../components/Layout";
 import Date from "../../components/Date";
 import { PostData } from "../../types/PostData";
@@ -16,7 +20,7 @@ type Props = {
 };
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const paths = await getAllPostIds();
+  const paths = (await getAllPostIds()).map((id) => ({ params: { id } }));
 
   return {
     paths,
@@ -27,7 +31,8 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 export const getStaticProps: GetStaticProps<Props, Params> = async ({
   params,
 }) => {
-  const postData = await getPostData((params as Params).id);
+  const rawPostData = await getRawPostData((params as Params).id);
+  const postData = await parseRawPostData(rawPostData);
 
   return {
     props: { postData },
