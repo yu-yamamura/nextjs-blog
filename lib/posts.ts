@@ -4,18 +4,27 @@ import matter from "gray-matter";
 import { remark } from "remark";
 import remarkHtml from "remark-html";
 import { isPostData, PostData } from "../types/PostData";
+import { RawPostData } from "../types/RawPostData";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
+export const getRawPostData = async (id: string): Promise<RawPostData> => {
+  const fullPath = path.join(postsDirectory, `${id}.md`);
+  const fileContent = await fs.readFile(fullPath);
+
+  return {
+    id,
+    content: fileContent.toString(),
+  };
+};
+
 export const getSortedPostsData = async (): Promise<PostData[]> => {
-  const fileNames = await fs.readdir(postsDirectory);
-
+  const allPostIds = await getAllPostIds();
+  const allRawPostsData = await Promise.all(
+    allPostIds.map((id) => getRawPostData(id))
+  );
   const allPostsData = await Promise.all(
-    fileNames.map((fileName) => {
-      const id = fileName.replace(/.md$/, "");
-
-      return getPostData(id);
-    })
+    allRawPostsData.map((rawPostData) => parseRawPostData(rawPostData))
   );
 
   return allPostsData.sort(({ date: a }, { date: b }) => {
@@ -29,23 +38,14 @@ export const getSortedPostsData = async (): Promise<PostData[]> => {
   });
 };
 
-export const getAllPostIds = async (): Promise<
-  {
-    params: { id: string };
-  }[]
-> => {
+export const getAllPostIds = async (): Promise<string[]> => {
   const fileNames = await fs.readdir(postsDirectory);
 
-  return fileNames
-    .map((fileName) => fileName.replace(/.md$/, ""))
-    .map((id) => ({ params: { id } }));
+  return fileNames.map((fileName) => fileName.replace(/.md$/, ""));
 };
 
-export const getPostData = async (id: string): Promise<PostData> => {
-  const fullPath = path.join(postsDirectory, `${id}.md`);
-  const fileContent = await fs.readFile(fullPath);
-
-  const matterResult = matter(fileContent);
+export const parseRawPostData = async ({ content, id }: RawPostData) => {
+  const matterResult = matter(content);
 
   const proceededContent = await remark()
     .use(remarkHtml)
